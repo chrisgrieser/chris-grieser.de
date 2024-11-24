@@ -38,19 +38,21 @@ printf "\33[2K\r" # remove progress-message/spinner
 
 #───────────────────────────────────────────────────────────────────────────────
 
-conclusion=$(echo "$last_run" | grep '"conclusion":' | cut -d'"' -f4)
 if [[ "$run_status" != "completed" ]]; then
 	msg="⚠️ Timeout after $timeout_secs seconds."
 	sound="Basso"
 	code=1
-elif [[ "$conclusion" != "success" ]]; then
-	msg="❌ $conclusion"
-	sound="Basso"
-	code=1
 else
-	msg="✅ Success"
-	sound="Hero"
-	code=0
+	conclusion=$(echo "$last_run" | grep '"conclusion":' | cut -d'"' -f4)
+	if [[ "$conclusion" != "success" ]]; then
+		msg="❌ $conclusion"
+		sound="Basso"
+		code=1
+	else
+		msg="✅ Success"
+		sound="Hero"
+		code=0
+	fi
 fi
 
 echo "$msg"
